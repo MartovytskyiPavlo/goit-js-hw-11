@@ -26,9 +26,7 @@ async function getImages(e) {
 
 // https://pixabay.com/api/?key={ KEY }&q=yellow+flowers&image_type=photo
 async function fetchImages(name) {
-  const searchStr = name.split(' ').join('+');
-  console.log(API_URL + "?key=" + key + "&q=" + searchStr + "&image_type=photo" + "&orientation=horizontal" + "&safesearch=true" + "&per_page=40");
-  return fetch(API_URL + "?key=" + key+"&q="+searchStr+"&image_type=photo"+"&orientation=horizontal"+"&safesearch=true"+"&per_page=40").then(r => r.json())
+  return fetch(API_URL + "?key=" + key+"&q="+encodeURIComponent(name)+"&image_type=photo"+"&orientation=horizontal"+"&safesearch=true"+"&per_page=40").then(r => r.json())
 }
 
 function getOneImage(item) {
