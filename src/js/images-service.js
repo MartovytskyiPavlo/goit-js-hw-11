@@ -1,7 +1,9 @@
 export default class ImagesApiService{
-    constructor() { }
+    constructor() { 
+        this.searchQuery = '';
+    }
     
-    fetchImages(searchQuery) { 
+    fetchImages() { 
         const API_URL = "https://pixabay.com/api/"; 
         const key = '29779995-417a1bba921000e7251cb80ce';
 
