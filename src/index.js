@@ -3,23 +3,22 @@ import Notiflix from 'notiflix';
 const API_URL = "https://pixabay.com/api/";
 
 const gallery = document.querySelector(".gallery");
-const search = document.forms[0];
-const input = document.forms[0].searchQuery;
+const searchForm = document.querySelector(".search-form");
+const loadMoreBtn = document.querySelector(".load-more");
 
 const key = '29779995-417a1bba921000e7251cb80ce';
-const per_page = 40;
 let page = 1;
 
-search.addEventListener("submit", getImages);
+searchForm.addEventListener('submit', onSearch);
 
-async function getImages(e) {
+async function onSearch(e) {
   e.preventDefault();
 
-  const name = input.value.trim(); 
+  const searchQuery = e.currentTarget.elements.searchQuery.value.trim(); 
+
+  if (!searchQuery) { return; }
   
-  if (!name) { return; }
-  
-  await fetchImages(name).then(renderCard);
+  await fetchImages(searchQuery).then(renderCard);
     
 }
 
@@ -71,4 +70,8 @@ function renderCard(data) {
       console.log(data.hits);
         gallery.innerHTML = prepareList(data.hits);  
     }
+}
+
+function hideLoadMoreBtnVisibility() {
+  loadMoreBtn.hidden = true;
 }
