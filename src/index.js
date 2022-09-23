@@ -12,12 +12,11 @@ searchForm.addEventListener('submit', onSearch);
 async function onSearch(e) {
   e.preventDefault();
 
-  const searchQuery = e.currentTarget.elements.searchQuery.value.trim(); 
-
-  if (!searchQuery) { return; }
+  imagesApiService.query = e.currentTarget.elements.searchQuery.value.trim(); 
+  imagesApiService.resetPage();
   
   // await fetchImages(searchQuery).then(renderCard);
-  await imagesApiService.fetchImages(searchQuery).then(renderCard);  
+  await imagesApiService.fetchImages().then(renderCard);  
 }
 
 
@@ -55,7 +54,8 @@ function getOneImage(item) {
     for (const item of data) {
         result += getOneImage(item);
     }
-
+  //  const result = data.map();
+    
     return result;
 }
 
@@ -64,9 +64,8 @@ function renderCard(data) {
     if (data.hits.length===0) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } else {
-      Notiflix.Notify.success('Hooray! We found '+data.totalHits+' images.');
-      console.log(data.hits);
-        gallery.innerHTML = prepareList(data.hits);  
+      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
+      gallery.innerHTML = prepareList(data.hits);  
     }
 }
 
