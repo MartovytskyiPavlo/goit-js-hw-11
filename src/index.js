@@ -1,13 +1,11 @@
 import Notiflix from 'notiflix';
-
-const API_URL = "https://pixabay.com/api/";
+import ImagesApiService from './js/images-service'
 
 const gallery = document.querySelector(".gallery");
 const searchForm = document.querySelector(".search-form");
 const loadMoreBtn = document.querySelector(".load-more");
 
-const key = '29779995-417a1bba921000e7251cb80ce';
-let page = 1;
+const imagesApiService = new ImagesApiService();
 
 searchForm.addEventListener('submit', onSearch);
 
@@ -18,15 +16,15 @@ async function onSearch(e) {
 
   if (!searchQuery) { return; }
   
-  await fetchImages(searchQuery).then(renderCard);
-    
+  // await fetchImages(searchQuery).then(renderCard);
+  await imagesApiService.fetchImages(searchQuery).then(renderCard);  
 }
 
 
 // https://pixabay.com/api/?key={ KEY }&q=yellow+flowers&image_type=photo
-async function fetchImages(name) {
-  return fetch(API_URL + "?key=" + key+"&q="+encodeURIComponent(name)+"&image_type=photo"+"&orientation=horizontal"+"&safesearch=true"+"&per_page=40").then(r => r.json())
-}
+// async function fetchImages(searchQuery) {
+//   return fetch(API_URL + "?key=" + key+"&q="+encodeURIComponent(searchQuery)+"&image_type=photo"+"&orientation=horizontal"+"&safesearch=true"+"&per_page=40").then(r => r.json())
+// }
 
 function getOneImage(item) {
     return `<div class="photo-card">
