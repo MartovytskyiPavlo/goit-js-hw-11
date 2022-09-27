@@ -19,7 +19,7 @@ export default class ImagesApiService{
                 this.incrementPage();
                 this.enableNextPage = (data.totalHits < this.page * 40);
                 return data;
-            }).catch(e => {return ''; });
+            });
     }
 
     incrementPage() {

@@ -30,26 +30,26 @@ async function onLoadMore() {
 
 
  function prepareList(data) {
-   const markup = posts
+   const markup = data
     .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
       return `<div class="photo-card">
-        <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" />
+        <img src="${webformatURL}" alt="${tags}" loading="lazy" />
         <div class="info">
           <p class="info-item">
             <b>Likes</b>
-            ${item.likes}
+            ${likes}
           </p>
           <p class="info-item">
             <b>Views</b>
-            ${item.views}
+            ${views}
           </p>
           <p class="info-item">
             <b>Comments</b>
-            ${item.comments}
+            ${comments}
           </p>
           <p class="info-item">
             <b>Downloads</b>
-            ${item.downloads}
+            ${downloads}
           </p>
         </div>
       </div>`;
