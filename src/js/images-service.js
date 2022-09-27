@@ -17,7 +17,7 @@ export default class ImagesApiService{
             .then(r => r.json())
             .then(data => {
                 this.incrementPage();
-                this.enableNextPage = (data.totalHits < this.page * 40);
+                this.enableNextPage = (data.totalHits > this.page * 40);
                 return data;
             });
     }

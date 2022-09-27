@@ -17,7 +17,8 @@ async function onSearch(e) {
   imagesApiService.resetPage();
   gallery.innerHTML = "";
   
-  // await fetchImages(searchQuery).then(renderCard);
+  if (imagesApiService.query === '') return;
+
   await imagesApiService.fetchImages().then(renderCard);  
   hideLoadMoreBtnVisibility();
 
@@ -63,13 +64,14 @@ function renderCard(data) {
     if (!data.totalHits) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } else {
-
-      console.log(data);
       if (data.page===1) { Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`); }
       gallery.insertAdjacentHTML("beforeend", prepareList(data.hits));
     }
 }
 
 function hideLoadMoreBtnVisibility() {
-  loadMoreBtn.hidden = imagesApiService.enableNextPage;
+  if (imagesApiService.enableNextPage) { loadMoreBtn.classList.remove('visually-hidden') }
+  else {
+    loadMoreBtn.classList.add('visually-hidden');
+  }
 }
