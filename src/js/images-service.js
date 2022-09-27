@@ -2,6 +2,7 @@ export default class ImagesApiService{
     constructor() { 
         this.searchQuery = '';
         this.page = 1;
+        this.enableNextPage = false;
     }
     
     fetchImages() { 
@@ -12,7 +13,13 @@ export default class ImagesApiService{
 
         const URL = `${API_URL}?key=${key}&q=${this.searchQuery}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${this.page}`;
 
-        return fetch(URL).then(r => r.json());
+        return fetch(URL)
+            .then(r => r.json())
+            .then(data => {
+                this.incrementPage();
+                this.enableNextPage = (data.totalHits < this.page * 40);
+                return data;
+            }).catch(e => {return ''; });
     }
 
     incrementPage() {

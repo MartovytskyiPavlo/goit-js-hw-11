@@ -8,67 +8,68 @@ const loadMoreBtn = document.querySelector(".load-more");
 const imagesApiService = new ImagesApiService();
 
 searchForm.addEventListener('submit', onSearch);
+loadMoreBtn.addEventListener('click', onLoadMore);
 
 async function onSearch(e) {
   e.preventDefault();
 
   imagesApiService.query = e.currentTarget.elements.searchQuery.value.trim(); 
   imagesApiService.resetPage();
+  gallery.innerHTML = "";
   
   // await fetchImages(searchQuery).then(renderCard);
   await imagesApiService.fetchImages().then(renderCard);  
+  hideLoadMoreBtnVisibility();
+
 }
 
-
-// https://pixabay.com/api/?key={ KEY }&q=yellow+flowers&image_type=photo
-// async function fetchImages(searchQuery) {
-//   return fetch(API_URL + "?key=" + key+"&q="+encodeURIComponent(searchQuery)+"&image_type=photo"+"&orientation=horizontal"+"&safesearch=true"+"&per_page=40").then(r => r.json())
-// }
-
-function getOneImage(item) {
-    return `<div class="photo-card">
-  <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" />
-  <div class="info">
-    <p class="info-item">
-      <b>Likes</b>
-      ${item.likes}
-    </p>
-    <p class="info-item">
-      <b>Views</b>
-      ${item.views}
-    </p>
-    <p class="info-item">
-      <b>Comments</b>
-      ${item.comments}
-    </p>
-    <p class="info-item">
-      <b>Downloads</b>
-      ${item.downloads}
-    </p>
-  </div>
-</div>`;
+async function onLoadMore() {
+  await imagesApiService.fetchImages().then(renderCard);  
+  hideLoadMoreBtnVisibility();
 }
+
 
  function prepareList(data) {
-    let result = "";
-    for (const item of data) {
-        result += getOneImage(item);
-    }
-  //  const result = data.map();
+   const markup = posts
+    .map(({ webformatURL, tags, likes, views, comments, downloads }) => {
+      return `<div class="photo-card">
+        <img src="${item.webformatURL}" alt="${item.tags}" loading="lazy" />
+        <div class="info">
+          <p class="info-item">
+            <b>Likes</b>
+            ${item.likes}
+          </p>
+          <p class="info-item">
+            <b>Views</b>
+            ${item.views}
+          </p>
+          <p class="info-item">
+            <b>Comments</b>
+            ${item.comments}
+          </p>
+          <p class="info-item">
+            <b>Downloads</b>
+            ${item.downloads}
+          </p>
+        </div>
+      </div>`;
+    })
+    .join("");
     
-    return result;
+  return markup;
 }
 
 function renderCard(data) {
-  gallery.innerHTML = "";
-    if (data.hits.length===0) {
+    if (!data.totalHits) {
         Notiflix.Notify.failure('Sorry, there are no images matching your search query. Please try again.');
     } else {
-      Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`);
-      gallery.innerHTML = prepareList(data.hits);  
+
+      console.log(data);
+      if (data.page===1) { Notiflix.Notify.success(`Hooray! We found ${data.totalHits} images.`); }
+      gallery.insertAdjacentHTML("beforeend", prepareList(data.hits));
     }
 }
 
 function hideLoadMoreBtnVisibility() {
-  loadMoreBtn.hidden = true;
+  loadMoreBtn.hidden = imagesApiService.enableNextPage;
 }
